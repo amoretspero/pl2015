@@ -1,9 +1,13 @@
 (** **** Problem #1 : 2 stars (mult_S_1) *)
 Theorem mult_S_1 : forall n m : nat,
   m = S n -> 
-  m * (1 + n) = m * m.
+  m * (1 + n) = m * m .
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  simpl.
+  rewrite <- H .
+  reflexivity.
+Qed.
 (** [] *)
 
 
@@ -27,7 +31,12 @@ Fixpoint beq_nat (n m : nat) : bool :=
 Theorem zero_nbeq_plus_1 : forall n : nat,
   beq_nat 0 (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  destruct n as [| m].
+  reflexivity.
+  reflexivity.
+Qed.
+
 (** [] *)
 
 
@@ -43,10 +52,15 @@ Proof.
 Theorem negation_fn_applied_twice : 
   forall (f : bool -> bool), 
   (forall (x : bool), f x = negb x) ->
-  forall (b : bool), f (f b) = b.
+  forall (b : bool), f (f b) = b .
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  intros.
+  rewrite -> H .
+  rewrite -> H .
+  destruct b as [true | false].
+    reflexivity.
+    reflexivity.
+Qed.
 
 
 
@@ -61,11 +75,10 @@ Proof.
 Theorem andb_eq_orb : 
   forall (b c : bool),
   (andb b c = orb b c) ->
-  b = c.
+  b = c .
 Proof.
-  (* FILL IN HERE *) Admitted.
-
-
+  intros.
+  
 
 
 
