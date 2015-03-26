@@ -203,20 +203,14 @@ Theorem plus_swap : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
   intros.
-  induction n.
-  simpl.
-  reflexivity.
-  simpl.
-  rewrite -> IHn .
-  rewrite -> plus_n_Sm .
+  rewrite plus_assoc .
+  assert (n + m = m + n) .
+    rewrite plus_comm .
+    reflexivity.
+  rewrite H .
+  rewrite <- plus_assoc .
   reflexivity.
 Qed.
-
-
-
-
-
-
 
 (** **** Problem #8 : 3 stars (mult_comm) *)
 
