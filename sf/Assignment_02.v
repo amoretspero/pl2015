@@ -84,10 +84,14 @@ Proof.
       simpl.
       reflexivity.
       simpl.
-      auto.
-    destruct c.
+      intros H1 .
+      rewrite H1 .
+      reflexivity.
+    destruct c .
       simpl.
-      auto.
+      intros H2 .
+      rewrite H2 .
+      reflexivity.
       simpl.
       reflexivity.
 Qed.
@@ -135,7 +139,8 @@ Proof.
   reflexivity.
   simpl.
   rewrite -> IHn.
-  auto.
+  rewrite -> plus_n_Sm .
+  reflexivity.
 Qed.
   
 Theorem plus_assoc : forall n m p : nat,
@@ -177,7 +182,8 @@ Proof.
   reflexivity.
   simpl.
   rewrite -> IHn.
-  auto.
+  rewrite -> plus_n_Sm .
+  reflexivity.
 Qed.
 
 (** [] *)
@@ -202,7 +208,8 @@ Proof.
   reflexivity.
   simpl.
   rewrite -> IHn .
-  auto.
+  rewrite -> plus_n_Sm .
+  reflexivity.
 Qed.
 
 
@@ -237,7 +244,8 @@ Proof.
   reflexivity.
   simpl.
   rewrite -> mult_plus_distr_r .
-  auto.
+  rewrite -> IHn .
+  reflexivity.
 Qed.
 (** [] *)
 
@@ -301,6 +309,3 @@ Proof.
   reflexivity.
 Qed.
 (** [] *)
-
-
-Print fst_swap_is_snd.
