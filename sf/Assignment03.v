@@ -76,10 +76,20 @@ Definition option_elim (d : nat) (o : natoption) : nat :=
     what these functions should do. *)
 
 Fixpoint nonzeros (l:natlist) : natlist :=
-  (* FILL IN HERE *) admit.
+  match l with
+  | nil => nil
+  | h :: t =>
+    match h with
+    | O => nonzeros t
+    | p => p :: (nonzeros t)
+    end
+  end.
 
 Example test_nonzeros:            nonzeros [0;1;0;2;3;0;0] = [1;2;3].
- (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 
 (** [] *)
 
@@ -104,16 +114,31 @@ Example test_nonzeros:            nonzeros [0;1;0;2;3;0;0] = [1;2;3].
     defining a new kind of pairs, but this is not the only way.)  *)
 
 Fixpoint alternate (l1 l2 : natlist) : natlist :=
- (* FILL IN HERE *) admit.
+ match l1 with
+  | nil => l2
+  | h1 :: t1 =>
+    match l2 with
+    | nil => h1 :: t1
+    | h2 :: t2 => h1 :: h2 :: (alternate t1 t2)
+    end
+  end.
 
 Example test_alternate1:        alternate [1;2;3] [4;5;6] = [1;4;2;5;3;6].
- (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 Example test_alternate2:        alternate [1] [4;5;6] = [1;4;5;6].
- (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 Example test_alternate3:        alternate [1;2;3] [4] = [1;4;2;3].
- (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 Example test_alternate4:        alternate [] [20;30] = [20;30].
- (* FILL IN HERE *) Admitted. 
+Proof.
+  reflexivity.
+Qed.
 (** [] *)
 
 
@@ -129,42 +154,150 @@ Example test_alternate4:        alternate [] [20;30] = [20;30].
 Theorem app_nil_end : forall l : natlist, 
   l ++ [] = l.   
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction l .
+  reflexivity.
+  simpl.
+  rewrite -> IHl .
+  reflexivity.
+Qed.
 
 
 (** Hint: You may need to first state and prove some lemma about snoc and rev. *)
-Theorem rev_involutive : forall l : natlist,
-  rev (rev l) = l.
+Theorem app_to_snoc : forall (l : natlist) (n : nat),
+  l ++ [n] = (snoc l n).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction l .
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite <- IHl .
+  reflexivity.
+Qed.
+
+Theorem app_in_rev : forall (n : nat) (l : natlist),
+  rev (n :: l) = (rev l) ++ [n] .
+Proof.
+  intros.
+  destruct l .
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite app_to_snoc .
+  reflexivity.
+Qed.
+
+
+Theorem rev_app : forall (n : nat) (l : natlist),
+  (snoc(rev l) n) = (app (rev l) [n]).
+Proof.
+  intros.
+  induction l .
+  simpl.
+  reflexivity.
+  assert ((rev (n0 :: l) ++ [n]) = snoc (rev (n0 :: l)) n).
+    rewrite <- app_to_snoc .
+    reflexivity.
+  rewrite -> H .
+  reflexivity.
+Qed.
+
+Theorem snoc_app_dist : forall (n : nat) (n0 : nat) (l : natlist),
+  snoc (n :: l) n0 = n :: (snoc l n0) .
+Proof.
+  intros.
+  simpl.
+  reflexivity.
+Qed.
+
+Theorem rev_to_snoc : forall (n : nat) (l : natlist),
+  rev (snoc l n) = n :: (rev l).
+Proof.
+  intros.
+  induction l .
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite -> IHl .
+  rewrite -> snoc_app_dist .
+  reflexivity.
+Qed.
+  
+
+Theorem rev_involutive : forall l : natlist,
+  rev (rev l) = l .
+Proof.
+  intros.
+  induction l .
+  reflexivity.
+  simpl.
+  rewrite rev_to_snoc .
+  rewrite -> IHl .
+  reflexivity.
+Qed.
 
 
 (** There is a short solution to the next exercise.  If you find
     yourself getting tangled up, step back and try to look for a
     simpler way. *)
 Theorem app_assoc4 : forall l1 l2 l3 l4 : natlist,
-  l1 ++ (l2 ++ (l3 ++ l4)) = ((l1 ++ l2) ++ l3) ++ l4.
+  l1 ++ (l2 ++ (l3 ++ l4)) = ((l1 ++ l2) ++ l3) ++ l4 .
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  rewrite -> app_assoc .
+  rewrite -> app_assoc .
+  reflexivity.
+Qed.
 
 
 Theorem snoc_append : forall (l:natlist) (n:nat),
   snoc l n = l ++ [n].
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction l .
+  reflexivity.
+  simpl.
+  rewrite -> IHl .
+  reflexivity.
+Qed.
+  
 
 
 Theorem distr_rev : forall l1 l2 : natlist,
   rev (l1 ++ l2) = (rev l2) ++ (rev l1).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction l1 .
+  simpl.
+  rewrite app_nil_end .
+  reflexivity.
+  simpl.
+  rewrite snoc_append .
+  rewrite -> snoc_append .
+  rewrite IHl1 .
+  rewrite app_assoc .
+  reflexivity.
+Qed.
+  
 
 
 (** An exercise about your implementation of [nonzeros]: *)
 Theorem nonzeros_app : forall l1 l2 : natlist,
   nonzeros (l1 ++ l2) = (nonzeros l1) ++ (nonzeros l2).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. 
+  induction l1 .
+  simpl.
+  reflexivity.
+  simpl.
+  induction n .
+  rewrite IHl1 .
+  reflexivity.
+  rewrite IHl1 .
+  reflexivity.
+Qed.
+  
 
 (** [] *)
 
@@ -188,20 +321,57 @@ Proof.
 Check beq_nat.
 
 Fixpoint beq_natlist (l1 l2 : natlist) : bool :=
-  (* FILL IN HERE *) admit.
+  match l1 with
+  | nil =>
+    match l2 with
+    | nil => true
+    | h :: t => false
+    end
+  | h1 :: t1 =>
+    match l2 with
+    | nil => false
+    | h2 :: t2 =>
+      match (beq_nat h1 h2) with
+      | true => (beq_natlist t1 t2)
+      | false => false
+      end
+    end
+  end.
 
 Example test_beq_natlist1 :   (beq_natlist nil nil = true).
- (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 Example test_beq_natlist2 :   beq_natlist [1;2;3] [1;2;3] = true.
- (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 Example test_beq_natlist3 :   beq_natlist [1;2;3] [1;2;4] = false.
- (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 
 (** Hint: You may need to first prove a lemma about reflexivity of beq_nat. *)
 Theorem beq_natlist_refl : forall l:natlist,
   beq_natlist l l = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction l .
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHl .
+  induction n .
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHn .
+  reflexivity.
+Qed.
+  
 (** [] *)
 
 
@@ -224,9 +394,14 @@ Proof.
 
 (** Hint: You can use the lemma [rev_involutive]. *)
 Theorem rev_injective: forall l1 l2 : natlist, 
-  rev l1 = rev l2 -> l1 = l2.
+  rev l1 = rev l2 -> l1 = l2 .
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  rewrite <- rev_involutive .
+  rewrite <- H .
+  rewrite -> rev_involutive .
+  reflexivity.
+Qed.
 
 (** [] *)
 
@@ -250,16 +425,28 @@ Proof.
    have to pass a default element for the [nil] case.  *)
 
 Definition hd_opt (l : natlist) : natoption :=
-  (* FILL IN HERE *) admit.
+  match l with
+  | nil => None
+  | h :: t => Some h 
+  end.
 
 Example test_hd_opt1 : hd_opt [] = None.
- (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 
 Example test_hd_opt2 : hd_opt [1] = Some 1.
- (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 
 Example test_hd_opt3 : hd_opt [5;6] = Some 5.
- (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 
@@ -267,7 +454,14 @@ Example test_hd_opt3 : hd_opt [5;6] = Some 5.
 Theorem option_elim_hd : forall (l:natlist) (default:nat),
   hd default l = option_elim default (hd_opt l).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction l .
+  simpl.
+  reflexivity.
+  simpl.
+  reflexivity.
+Qed.
+  
 (** [] *)
 
 
@@ -323,10 +517,10 @@ Fixpoint length (X:Type) (l:list X) : nat :=
 
 Arguments nil {X}.
 Arguments cons {X} _ _.  (* use underscore for argument position that has no name *)
-Arguments length {X} l.
-Arguments app {X} l1 l2.
-Arguments rev {X} l. 
-Arguments snoc {X} l v.
+Arguments length {X} l .
+Arguments app {X} l1 l2 .
+Arguments rev {X} l . 
+Arguments snoc {X} l v .
 
 Notation "x :: y" := (cons x y)
                      (at level 60, right associativity).
@@ -374,20 +568,33 @@ Definition snd {X Y : Type} (p : X * Y) : Y :=
     Uncomment the material below and fill in the definition of
     [split].  Make sure it passes the given unit tests. *)
 
-Fixpoint split
-           {X Y : Type} (l : list (X*Y))
-           : (list X) * (list Y) :=
-(* FILL IN HERE *) admit.
+Fixpoint split {X Y : Type} (l : list (X*Y)) : (list X) * (list Y) :=
+  match l with
+  | nil => (pair nil nil)
+  | h :: t => (pair (map fst l) (map snd l))
+  end.
+
 
 Example test_split:
   split [(1,false);(2,false)] = ([1;2],[false;false]).
 Proof.
-(* FILL IN HERE *) Admitted.
+  simpl.
+  reflexivity.
+Qed.
+
 
 Theorem split_map: forall X Y (l: list (X*Y)),
-   fst (split l) = map fst l.
+   fst (split l) = map fst l .
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  simpl.
+  induction l .
+  simpl.
+  reflexivity.
+  simpl.
+  reflexivity.
+Qed.
+
 
 (** [] *)
 
