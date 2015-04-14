@@ -11,11 +11,15 @@ Require Export Assignment05_02.
     [inversion] to break it into two separate implications.  (Think
     about why this works.) *)
 
-
 Theorem iff_refl : forall P : Prop, 
   P <-> P.
 Proof. 
-  (* FILL IN HERE *) admit.
+  intros.
+  split.
+  intros H0.
+  apply H0.
+  intros H1.
+  apply H1.  
 Qed.
 
 
