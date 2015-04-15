@@ -63,7 +63,7 @@ Inductive beautiful : nat -> Prop :=
 | b_0   : beautiful 0
 | b_3   : beautiful 3
 | b_5   : beautiful 5
-| b_sum : forall n m (beuty_n:beautiful n) (beauty_m: beautiful m),
+| b_sum : forall n m (beauty_n:beautiful n) (beauty_m: beautiful m),
             beautiful (n+m)
 .
 

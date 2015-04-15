@@ -13,9 +13,15 @@ Theorem and_assoc : forall P Q R : Prop,
   P /\ (Q /\ R) -> (P /\ Q) /\ R.
 Proof.
   intros P Q R H.
-  destruct H as [HP [HQ HR]].
-(* FILL IN HERE *) admit.
+  destruct H as [HP [HQ HR]]. 
+  (* This is same as 'destruct H as [HP HQ']. destruct HQ' as [HQ HR].' *)
+  split.
+  split.
+  apply HP.
+  apply HQ.
+  apply HR.
 Qed.
+
 (** [] *)
 
 
