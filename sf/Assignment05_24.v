@@ -15,7 +15,17 @@ Require Export Assignment05_23.
 Theorem ev_ev__ev : forall n m,
   ev (n+m) -> ev n -> ev m.
 Proof.
-  (* FILL IN HERE *) admit.
+    intros n m.
+    intros H0.
+    intros H1.
+    induction H1.
+    simpl in H0.
+    apply H0.
+    simpl in H0.
+    inversion H0.
+    apply IHev.
+    apply pf_evn.
+    
 Qed.
 (** [] *)
 

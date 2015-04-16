@@ -26,7 +26,21 @@ Check ev_ev__ev.
 Theorem ev_plus_plus : forall n m p,
   ev (n+m) -> ev (n+p) -> ev (m+p).
 Proof.
-  (* FILL IN HERE *) admit.
+    intros.
+    apply ev_sum with (n := n + m) (m := n +p) in H.
+    rewrite -> plus_comm with (n := n) (m := m) in H.
+    rewrite <- plus_assoc with (n := m) (m := n) (p := (n + p)) in H.
+    rewrite -> plus_comm with (n := m) (m := (n + (n +p))) in H.
+    rewrite -> plus_assoc with (n := n) (m := n) (p := p) in H.
+    replace (n + n + p + m) with ((n + n)+(p + m)) in H.
+    apply ev_ev__ev with (n := n + n) (m := (p +m )) in H.
+    rewrite -> plus_comm with (n := p) (m := m) in H.
+    apply H.
+    rewrite <- double_plus.
+    apply double_even.
+    apply plus_assoc.
+    apply H0.
+    
 Qed.
 (** [] *)
 

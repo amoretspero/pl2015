@@ -9,7 +9,17 @@ Require Export Assignment05_13.
 Theorem ev__even: forall n : nat,
   ev n -> even n.
 Proof.
-  (* FILL IN HERE *) admit.
+  intros n.
+  intros H0.
+  induction H0.
+  unfold even.
+  simpl.
+  reflexivity.
+  unfold even.
+  unfold even in IHev.
+  simpl.
+  rewrite IHev.
+  reflexivity.
 Qed.
 (** [] *)
 

@@ -4,7 +4,13 @@ Require Export Assignment05_31.
 
 Theorem Sn_le_Sm__n_le_m : forall n m,
   S n <= S m -> n <= m.
-Proof. 
-  (* FILL IN HERE *) admit.
+Proof.
+    intros.
+    inversion H.
+    apply le_n.
+    apply le_trans with (m := n) (n := S n) (o := m).
+    apply le_S.
+    apply le_n.
+    apply H2.
 Qed.
 
