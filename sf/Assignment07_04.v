@@ -6,7 +6,13 @@ Require Export Assignment07_03.
 Lemma neq_id : forall (T:Type) x y (p q:T), x <> y -> 
                (if eq_id_dec x y then p else q) = q. 
 Proof.
-  (* FILL IN HERE *) admit.
+    intros.
+    unfold not in H.
+    destruct eq_id_dec.
+    apply H in e.
+    inversion e.
+    reflexivity.
 Qed.
 (** [] *)
+
 

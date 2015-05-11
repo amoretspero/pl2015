@@ -7,7 +7,13 @@ Theorem update_neq : forall x2 x1 n st,
   x2 <> x1 ->                        
   (update st x2 n) x1 = (st x1).
 Proof.
-  (* FILL IN HERE *) admit.
+    intros.
+    unfold update.
+    destruct eq_id_dec.
+    unfold not in H.
+    apply H in e.
+    inversion e.
+    reflexivity.
 Qed.
 (** [] *)
 
