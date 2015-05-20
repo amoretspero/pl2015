@@ -6,12 +6,62 @@ Require Export Assignment08_07.
 (** Show that we can swap the branches of an IF by negating its
     condition *)
 
+Lemma beval_neg : forall st b,
+    beval st b = negb (beval st (BNot b)).
+Proof.
+    intros.
+    simpl.
+    rewrite negb_involutive.
+    auto.
+Qed.
+
+Lemma negb_bool : forall b,
+    b = true -> (negb b) = false.
+Proof.
+    intros.
+    rewrite H.
+    auto.
+Qed.
+
 Theorem swap_if_branches: forall b e1 e2,
   cequiv
     (IFB b THEN e1 ELSE e2 FI)
     (IFB BNot b THEN e2 ELSE e1 FI).
 Proof.
-  exact FILL_IN_HERE.
+    intros.
+    unfold cequiv.
+    intros.
+    split.
+    intros.
+    inversion H.
+    subst.
+    apply E_IfFalse.
+    simpl.
+    rewrite H5.
+    reflexivity.
+    apply H6.
+    subst.
+    apply E_IfTrue.
+    simpl.
+    rewrite H5.
+    reflexivity.
+    apply H6.
+    intros.
+    inversion H.
+    subst.
+    apply E_IfFalse.
+    simpl in H5.
+    apply negb_true_iff in H5.
+    apply H5.
+    apply H6.
+    subst.
+    apply E_IfTrue.
+    simpl in H5.
+    apply negb_false_iff in H5.
+    apply H5.
+    apply H6.
+    
+    
 Qed.
 
 (*-- Check --*)
