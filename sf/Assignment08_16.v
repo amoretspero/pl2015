@@ -12,44 +12,23 @@ Proof.
     unfold aequiv.
     intros.
     induction a;
-        simpl;
         try (
-        reflexivity;
-        apply refl_aequiv;
-        destruct (optimize_0plus_aexp a1);
-        destruct (optimize_0plus_aexp a2);
+        simpl;
+        auto).
+        destruct a1;
+        try destruct n; try auto;
+        destruct a2;
+        try destruct n0; try auto;
+        try rewrite IHa1;
+        try rewrite IHa2;
+        auto;
+        destruct n;
+        try rewrite <- IHa1;
+        try rewrite <- IHa2;
+        auto;
         rewrite IHa1;
         rewrite IHa2;
-        reflexivity).
-        destruct n.
-        destruct n0.
         auto.
-        auto.
-        destruct n0.
-        auto.
-        auto.
-        simpl.
-        destruct n.
-        auto.
-        auto.
-        
-        simpl.
-        try (
-        rewrite <- IHa1;
-        simpl;
-        rewrite <- IHa2;
-        reflexivity).
-        rewrite <- IHa1.
-        simpl.
-        auto;
-        rewrite <- IHa1;
-        rewrite <- IHa2;
-        auto).
-        
-        remember (optimize_0plus_aexp a1) as oa_a1.
-        remember (optimize_0plus_aexp a2) as oa_a2.
-        
-        
 Qed.
 
 (*-- Check --*)
