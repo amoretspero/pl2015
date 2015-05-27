@@ -57,7 +57,43 @@ Theorem parity_correct : forall m,
   END
     {{ fun st => st X = parity m }}.
 Proof.
-  exact FILL_IN_HERE.
+    intros.
+    apply hoare_consequence_pre with (P' := (fun st => parity (st X) = parity m)).
+    remember (fun st : id -> nat => parity (st X) = parity m) as p.
+    remember (fun st : state => st X = parity m) as q.
+    remember (BLe (ANum 2) (AId X)) as b.
+    remember (X ::= AMinus (AId X) (ANum 2)) as c.
+    apply hoare_consequence_post with (Q' := (fun st => p st /\ beval st b = false)).
+    apply hoare_while.
+    unfold hoare_triple.
+    intros.
+    subst.
+    inversion H0.
+    inversion H.
+    subst.
+    unfold update.
+    simpl.
+    unfold beval in H2.
+    apply ble_nat_true in H2.
+    simpl in H2.
+    apply parity_ge_2 in H2.
+    rewrite <- H1.
+    apply H2.
+    unfold assert_implies.
+    intros.
+    subst.
+    inversion H.
+    unfold beval in H1.
+    apply ble_nat_false in H1.
+    simpl in H1.
+    unfold not in H1.
+    rewrite <- H0.
+    apply parity_lt_2 in H1.
+    auto.
+    unfold assert_implies.
+    intros.
+    auto.
+
 Qed.
 
 (*-- Check --*)

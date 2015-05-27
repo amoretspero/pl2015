@@ -11,7 +11,29 @@ Theorem is_wp_example :
   is_wp (fun st => st Y <= 4)
     (X ::= APlus (AId Y) (ANum 1)) (fun st => st X <= 5).
 Proof.
-  exact FILL_IN_HERE.
+    unfold is_wp.
+    split.
+    unfold hoare_triple.
+    intros.
+    inversion H.
+    subst.
+    unfold update.
+    simpl.
+    omega.
+    intros.
+    unfold hoare_triple in H.
+    unfold assert_implies.
+    intros.
+    assert ((X ::= APlus (AId Y) (ANum 1)) / (update empty_state Y 4) || (update (update empty_state Y 4) X 5)).
+    apply E_Ass.
+    auto.
+    apply H in H1.
+    unfold update in H1.
+    simpl in H1.
+    inversion H1.
+    subst.
+    inversion H1.
+    
 Qed.
 
 (*-- Check --*)
