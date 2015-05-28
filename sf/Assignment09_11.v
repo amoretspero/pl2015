@@ -24,15 +24,14 @@ Proof.
     unfold hoare_triple in H.
     unfold assert_implies.
     intros.
-    assert ((X ::= APlus (AId Y) (ANum 1)) / (update empty_state Y 4) || (update (update empty_state Y 4) X 5)).
+    assert ((X ::= APlus (AId Y) (ANum 1)) / st || (update st X (st Y + 1))).
     apply E_Ass.
     auto.
     apply H in H1.
     unfold update in H1.
     simpl in H1.
-    inversion H1.
-    subst.
-    inversion H1.
+    omega.
+    apply H0.
     
 Qed.
 
