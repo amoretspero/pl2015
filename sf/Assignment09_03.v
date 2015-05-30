@@ -22,12 +22,16 @@ Proof.
     apply ex_intro with (x := (APlus (AId X) (ANum 1))).
     intros.
     simpl in H.
-    assert (H1 := H empty_state ((update empty_state X) (aeval empty_state (AId X)))).
+    assert (H1 := H empty_state (update empty_state X 1)).
     simpl in H1.
-    
-    
-    apply hoare_consequence_post with (P := fun _ : state => True) (c := (X ::= APlus (AId X) (ANum 1))) in H.
-    inversion H.
+    assert ((X ::= APlus (AId X) (ANum 1)) / empty_state || update empty_state X 1).
+    apply E_Ass.
+    auto.
+    apply H1 in H0.
+    unfold update in H0.
+    simpl in H0.
+    inversion H0.
+    auto.
 Qed.
 
 (*-- Check --*)

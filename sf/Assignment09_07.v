@@ -23,7 +23,47 @@ Theorem slow_addition_dec_correct : forall n m,
   END
   {{fun st => st Y = n + m}}.
 Proof.
-  exact FILL_IN_HERE.
+    intros.
+    remember (BNot (BEq (AId X) (ANum 0))) as b.
+    remember (fun st : state => st X = n /\ st Y = m) as p.
+    remember (fun st : state => st Y = n + m) as q.
+    remember (Y ::= APlus (AId Y) (ANum 1)) as c1.
+    remember (X ::= AMinus (AId X) (ANum 1)) as c2.
+    remember (c1 ;; c2) as c.
+    apply hoare_consequence_pre with (P' := (fun st : state => st X + st Y = n + m)).
+    apply hoare_consequence_post with (Q' := (fun st : state => (fun st : state => st X + st Y = n + m) st /\ beval st b = false)).
+    apply hoare_while.
+    unfold hoare_triple.
+    intros.
+    subst.
+    inversion H.
+    subst.
+    inversion H3.
+    subst.
+    inversion H6.
+    subst.
+    unfold update.
+    simpl.
+    inversion H0.
+    simpl in H2.
+    apply negb_true in H2.
+    rewrite <- H1.
+    apply beq_nat_false in H2.
+    omega.
+    unfold assert_implies.
+    intros.
+    subst.
+    inversion H.
+    simpl in H1.
+    apply negb_false in H1.
+    apply beq_nat_true in H1.
+    rewrite H1 in H0.
+    omega.
+    unfold assert_implies.
+    intros.
+    subst.
+    omega.
+    
 Qed.
 
 (*-- Check --*)
