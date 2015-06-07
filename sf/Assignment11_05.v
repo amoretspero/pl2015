@@ -28,11 +28,54 @@ Proof with auto.
     SCase "t1 can take a step".
       inversion H as [t1' H1].
       exists (tif t1' t2 t3)...
-      exact FILL_IN_HERE.
+  Case "T_Succ".
+    inversion IHHT.
+    inversion H.
+    inversion H0.
+    rewrite <- H1 in HT.
+    inversion HT.
+    rewrite <- H1 in HT.
+    inversion HT.
+    left.
+    right.
+    inversion H0.
+    auto.
+    auto.
+    right.
+    inversion H.
+    exists (tsucc x).
+    auto.
   Case "T_Pred".
-    exact FILL_IN_HERE.
+    inversion IHHT.
+    inversion H.
+    inversion H0.
+    rewrite <- H1 in HT.
+    inversion HT.
+    rewrite <- H1 in HT.
+    inversion HT.
+    right.
+    inversion H0.
+    exists (tzero).
+    auto.
+    eauto.
+    right.
+    inversion H.
+    eauto.
   Case "T_Iszero".
-    exact FILL_IN_HERE.
+    inversion IHHT.
+    inversion H.
+    inversion H0.
+    rewrite <- H1 in HT.
+    inversion HT.
+    rewrite <- H1 in HT.
+    inversion HT.
+    right.
+    inversion H0.
+    eauto.
+    eauto.
+    right.
+    inversion H.
+    eauto.
 Qed.
 
 (*-- Check --*)
