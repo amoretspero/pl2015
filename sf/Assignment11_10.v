@@ -71,13 +71,17 @@ Theorem tycheck_correct1: forall t T
   |- t \in T.
 Proof.
     intros.
+    generalize dependent T.
     induction t.
+    intros.
     induction T.
     auto.
     inversion TYCHK.
+    intros.
     induction T.
     auto.
     inversion TYCHK.
+    intros.
     induction T.
     inversion TYCHK.
     apply andb_prop in H0.
@@ -92,7 +96,6 @@ Proof.
     apply H2.
     apply IHt3.
     apply H3.
-    
     inversion TYCHK.
     apply andb_prop in H0.
     inversion H0.
@@ -100,8 +103,27 @@ Proof.
     inversion H1.
     clear H1.
     constructor.
-    constructor.
-    inversion H.
+    apply IHt1.
+    apply H.
+    apply IHt2.
+    apply H2.
+    apply IHt3.
+    apply H3.
+    intros.
+    induction T.
+    inversion TYCHK.
+    auto.
+    intros.
+    induction T.
+    inversion TYCHK.
+    auto.
+    intros.
+    induction T.
+    inversion TYCHK.
+    auto.
+    intros.
+    induction T.
+    auto.
     inversion TYCHK.
 Qed.
 
@@ -109,9 +131,65 @@ Theorem tycheck_correct2: forall t T
     (HASTY: |- t \in T),
   tycheck t T = true.
 Proof.
-  exact FILL_IN_HERE.
+    intros.
+    generalize dependent T.
+    induction t.
+    intros.
+    induction T.
+    auto.
+    inversion HASTY.
+    intros.
+    induction T.
+    auto.
+    inversion HASTY.
+    intros.
+    induction T.
+    inversion HASTY.
+    subst.
+    apply IHt1 in H2.
+    apply IHt2 in H4.
+    apply IHt3 in H5.
+    simpl.
+    rewrite H2.
+    rewrite H4.
+    rewrite H5.
+    auto.
+    inversion HASTY.
+    subst.
+    apply IHt1 in H2.
+    apply IHt2 in H4.
+    apply IHt3 in H5.
+    simpl.
+    rewrite H2.
+    rewrite H4.
+    rewrite H5.
+    auto.
+    intros.
+    induction T.
+    inversion HASTY.
+    auto.
+    intros.
+    induction T.
+    inversion HASTY.
+    inversion HASTY.
+    subst.
+    apply IHt in H0.
+    auto.
+    intros.
+    induction T.
+    inversion HASTY.
+    inversion HASTY.
+    subst.
+    apply IHt in H0.
+    auto.
+    intros.
+    induction T.
+    inversion HASTY.
+    subst.
+    apply IHt in H0.
+    auto.
+    inversion HASTY.
 Qed.
-
 (*-- Check --*)
 
 Check (conj tycheck_ex1 tycheck_ex2 :
